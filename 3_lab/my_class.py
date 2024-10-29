@@ -1,31 +1,71 @@
 class MySuperClass:
-    def __init__(self, surname, name, mark):
-        # в середині конструктора створюються атрибути
-        self.surname = surname
-        self.name = name
-        self.mark = mark
+    """Тестовий клас, зараз реалізуємо опис студента
+    
+    ---
+
+    surname : str
+        Прізвище студента
+    
+    """
+    def __init__(self, surname:str, name, mark:int, group=None):
+        """
+        Ініціалізуємо обєкт
+        - в середині конструктора створюються атрибути
+        """
+        print("Викликаємо __init__")
+        self.__surname = surname #  private Це приватні атрибути, вони не висвічуються назовні
+        self.__name = name
+        self.mark = mark # public публічний атрибук
+        self.group = group
+        self._age = None # (protected) захищений атрибут
+    
+    @property
+    def name(self):
+        """Ця властивість є затритою, її можна читати але не можна змінювати
+        """
+        return self.__name
+    
+    @property
+    def surname(self):
+        return self.__surname
+    
+    def __repr__(self):
+        return "Представлення обєкту Студент, його задають: MySuperClass(surname, name, mark)"
+    
+    def __len__(self):
+        return len(self.surname)
 
 def function_in_module():
     pass
 
 
 
-# Прикалад ChatGPT
+class Animal:
+    """
+    Клас Animal для зберігання інформації про тварин.
 
-class Car:
-    """Цей клас представляє автомобіль."""
+    Attributes:
+        name (str): Ім'я тварини.
+        species (str): Вид тварини.
+        age (int): Вік тварини.
+    """
 
-    def __init__(self, make, model, year):
-        self.make = make
-        self.model = model
-        self.year = year
+    def __init__(self, name: str, species: str, age: int):
+        """
+        Ініціалізує новий екземпляр класу Animal.
 
-    def __str__(self):
-        """Відображає об'єкт у зручному форматі."""
-        return f"Car(марка='{self.make}', модель='{self.model}', рік={self.year})"
+        Args:
+            name (str): Ім'я тварини.
+            species (str): Вид тварини.
+            age (int): Вік тварини.
+        """
+        self.name = name
+        self.species = species
+        self.age = age
 
-    def age(self):
-        """Повертає вік автомобіля."""
-        from datetime import datetime
-        current_year = datetime.now().year
-        return current_year - self.year
+    def make_sound(self, sound: str):
+        """Метод, що дозволяє тварині видавати звук."""
+        print(f"{self.name} говорить: {sound}")
+
+    def __repr__(self):
+        return f"Animal(name='{self.name}', species='{self.species}', age={self.age})"
