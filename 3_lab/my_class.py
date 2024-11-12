@@ -7,6 +7,14 @@ class MySuperClass:
         Прізвище студента
     
     """
+    var_lover_case = "Це проста класова змінна"
+    COLLEGE_NAME = "Це подібне до константи в клосі, але ми можемо її перезаписати"
+    _protected_var = 1
+    __private_var = 2
+
+    total_students = 0
+    total_marks = 0
+
     def __init__(self, surname:str, name, mark:int, group=None):
         """
         Ініціалізуємо обєкт
@@ -19,7 +27,20 @@ class MySuperClass:
         self.group = group
         self._age = None # (protected) захищений атрибут
         self._scholarship = 0
-    
+
+        self.var_lover_case = "Перазаписали класові змінну"
+        MySuperClass.total_students += 1
+        MySuperClass.total_marks += mark
+
+
+    def __del__(self):
+        print("Відрахували студента")
+        MySuperClass.total_students -= 1
+
+    @property
+    def college_raiting(self):
+        return MySuperClass.total_marks / MySuperClass.total_students
+
     @property
     def name(self):
         """Ця властивість є закритою, її можна читати але не можна змінювати
@@ -57,13 +78,13 @@ class MySuperClass:
 
     def calculate_scholarship_after_session(self, raiting: int):
         if raiting == 5:
-            self._scholarship = "2200 грн"
-            return "Вітаю! Отримано підвищену стипундію"
+            self._scholarship = "1800 грн"
+            return "Присвоєно підвищену стипундію"
         if raiting == 4:
-            self._scholarship = "1510 грн"
-            return "вітаю! Отримано звичайну стипундію"
+            self._scholarship = "1400 грн"
+            return "Присвоєно звичайну стипундію"
         self._scholarship = 0
-        return "На жаль рейтинг занизький для стипендії"
+        return "Рейтинг занизький для стипендії"
     
     def panishment(self):
         return "Ми прийшли додому і мама нас насварила за погані оцінки"
@@ -72,7 +93,6 @@ def function_in_module():
     """Це просто функція (згідно загальної термінології)
     """
     pass
-
 
 
 class Car:
@@ -185,3 +205,54 @@ class Library:
         available_books = [book.title for book in self.books if book.is_available]
         return available_books
 
+
+class LibrarySystem:
+    """Клас для управління бібліотечними книгами в бібліотечній системі."""
+    
+    # Класові змінні (для відстеження стану бібліотечної системи)
+    total_books = 0  # Загальна кількість книг у бібліотеці
+    available_books = 0  # Кількість доступних для позики книг
+    total_loans = 0  # Загальна кількість позик
+    
+    def __init__(self, title, author):
+        """Ініціалізуємо нову книгу з її назвою та автором."""
+        self.title = title
+        self.author = author
+        self.is_borrowed = False  # Книга на початку не позичена
+        
+        # Збільшуємо загальну кількість книг та доступних книг
+        LibrarySystem.total_books += 1
+        LibrarySystem.available_books += 1
+
+    def borrow(self):
+        """Позика книги, якщо вона доступна."""
+        if self.is_borrowed:
+            return f"Книга '{self.title}' вже позичена."
+        if LibrarySystem.available_books == 0:
+            return "У бібліотеці немає доступних книг для позики."
+        
+        self.is_borrowed = True
+        LibrarySystem.available_books -= 1
+        LibrarySystem.total_loans += 1
+        return f"Ви позичили книгу '{self.title}'."
+
+    def return_book(self):
+        """Повернення книги в бібліотеку."""
+        if not self.is_borrowed:
+            return f"Книга '{self.title}' не була позичена."
+        
+        self.is_borrowed = False
+        LibrarySystem.available_books += 1
+        return f"Ви повернули книгу '{self.title}'."
+
+    @classmethod
+    def library_status(cls):
+        """Статус бібліотеки: кількість книг, доступних для позики, та позик."""
+        return (f"У бібліотеці {cls.total_books} книг, з них доступних для позики {cls.available_books}."
+                f" Загальна кількість позик: {cls.total_loans}.")
+
+    @classmethod
+    def add_book(cls, title, author):
+        """Додати нову книгу до бібліотеки."""
+        new_book = LibrarySystem(title, author)
+        return new_book
