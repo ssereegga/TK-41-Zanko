@@ -88,6 +88,16 @@ class MySuperClass:
     
     def panishment(self):
         return "Ми прийшли додому і мама нас насварила за погані оцінки"
+    
+    @staticmethod
+    def hobbi(h=None):
+        """в таких методах нема вказівника на обєкт
+        """
+        if h:
+            print(f"В мене з'явилось хобі {h}")
+        else:
+            print("На жаль в мене немає хобі")
+
 
 def function_in_module():
     """Це просто функція (згідно загальної термінології)
@@ -256,3 +266,63 @@ class LibrarySystem:
         """Додати нову книгу до бібліотеки."""
         new_book = LibrarySystem(title, author)
         return new_book
+
+
+# my_class/my_class.py
+
+class Bodybuilder:
+    """Клас, що представляє бодібілдера."""
+
+    # Статична змінна для відстежування загальної кількості бодібілдерів
+    total_bodybuilders = 0
+
+    def __init__(self, name: str, age: int, weight: float, height: float):
+        """Ініціалізація бодібілдера з атрибутами: ім'я, вік, вага, зріст."""
+        self.name = name
+        self.age = age
+        self.weight = weight  # Вага в кг
+        self.height = height  # Зріст в см
+        self.progress = 0  # Прогрес в % від стартової форми
+        self.training_plan = []  # План тренувань
+        self.diet_plan = []  # План харчування
+
+        # Збільшуємо кількість бодібілдерів
+        Bodybuilder.total_bodybuilders += 1
+
+    def __del__(self):
+        """Метод для зменшення кількості бодібілдерів при видаленні об'єкта."""
+        Bodybuilder.total_bodybuilders -= 1
+
+    def calculate_bmi(self):
+        """Вираховує ІМТ (Індекс маси тіла)."""
+        height_in_meters = self.height / 100  # Перетворюємо зріст на метри
+        return self.weight / (height_in_meters ** 2)
+
+    def update_training_plan(self, new_plan: list):
+        """Оновлює план тренувань."""
+        self.training_plan = new_plan
+
+    def update_diet_plan(self, new_diet: list):
+        """Оновлює план харчування."""
+        self.diet_plan = new_diet
+
+    def track_progress(self):
+        """Обчислює прогрес на основі змін у вазі та тренуваннях."""
+        bmi = self.calculate_bmi()
+        if bmi < 18.5:
+            self.progress = 10  # Прогрес на стадії набору маси
+        elif 18.5 <= bmi < 25:
+            self.progress = 50  # Оптимальна форма
+        else:
+            self.progress = 30  # Прогрес на стадії спалювання жиру
+        return self.progress
+
+    @staticmethod
+    def get_total_bodybuilders():
+        """Статичний метод для отримання загальної кількості бодібілдерів."""
+        return Bodybuilder.total_bodybuilders
+
+    @classmethod
+    def create_bodybuilder_from_data(cls, data: dict):
+        """Класовий метод для створення бодібілдера з даних у вигляді словника."""
+        return cls(data['name'], data['age'], data['weight'], data['height'])
