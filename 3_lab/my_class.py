@@ -94,9 +94,25 @@ class MySuperClass:
         """в таких методах нема вказівника на обєкт
         """
         if h:
-            print(f"В мене з'явилось хобі {h}")
+            print(f"В мене зявилось хоббі {h}")
         else:
-            print("На жаль в мене немає хобі")
+            print("На жаль в мене немає Хаббі")
+    
+    @classmethod
+    def create_from_surname_name(cls, full_name:str):
+        """ альтернативний конструктор, створюємо обєкт з повного імені
+        розчеплюємо повне імя на частинки Прізкище та Імя
+        """
+        surname, name = full_name.split(" ")
+        return cls(surname, name, 0)
+    
+    @classmethod
+    def create_from_name_surname(cls, full_name:str):
+        """ альтернативний конструктор, створюємо обєкт з повного імені
+        розчеплюємо повне імя на частинки Прізкище та Імя
+        """
+        name, surname = full_name.split(" ")
+        return cls(surname, name, 0)
 
 
 def function_in_module():
@@ -326,3 +342,75 @@ class Bodybuilder:
     def create_bodybuilder_from_data(cls, data: dict):
         """Класовий метод для створення бодібілдера з даних у вигляді словника."""
         return cls(data['name'], data['age'], data['weight'], data['height'])
+
+
+
+
+class Food:
+    """Опис класу їжі в ресторані або кафе"""
+
+    total_items = 0
+    total_calories = 0
+
+    def __init__(self, name: str, category: str, price: float, calories: int):
+        """
+        Ініціалізація страви з її атрибутами.
+        - Назва страви, категорія (наприклад, закуска, основна страва), ціна, калорії.
+        """
+        print(f"Створюється страва: {name}")
+        self.name = name          # Назва страви
+        self.category = category  # Категорія страви (закуска, основна страва, десерт)
+        self.price = price        # Ціна страви
+        self.calories = calories  # Калорії
+
+        # Збільшуємо загальну кількість страв та загальні калорії
+        Food.total_items += 1
+        Food.total_calories += calories
+
+    def __del__(self):
+        """Очищення після видалення страви"""
+        print(f"Страва {self.name} була видалена")
+        Food.total_items -= 1
+        Food.total_calories -= self.calories
+
+    @property
+    def average_calories(self):
+        """Властивість для отримання середньої кількості калорій усіх страв"""
+        return Food.total_calories / Food.total_items if Food.total_items > 0 else 0
+
+    @property
+    def food_info(self):
+        """Отримання загальної інформації про страву"""
+        return f"{self.name} ({self.category}), ціна: {self.price} грн, калорії: {self.calories}"
+
+    @classmethod
+    def create_from_name_category(cls, name_category: str, price: float, calories: int):
+        """Альтернативний конструктор для створення страви за назвою та категорією"""
+        name, category = name_category.split(" - ")
+        return cls(name, category, price, calories)
+
+    @classmethod
+    def create_from_category_name(cls, category_name: str, price: float, calories: int):
+        """Альтернативний конструктор для створення страви за категорією та назвою"""
+        category, name = category_name.split(" - ")
+        return cls(name, category, price, calories)
+
+    def __repr__(self):
+        """Представлення об'єкта їжі"""
+        return f"Food('{self.name}', '{self.category}', {self.price}, {self.calories})"
+
+    def update_price(self, new_price: float):
+        """Оновлення ціни страви"""
+        self.price = new_price
+
+    def update_calories(self, new_calories: int):
+        """Оновлення калорій страви"""
+        Food.total_calories -= self.calories
+        self.calories = new_calories
+        Food.total_calories += new_calories
+
+    @staticmethod
+    def food_category(category: str):
+        """Статичний метод для виведення категорії страви"""
+        print(f"Ця страва належить до категорії: {category}")
+
